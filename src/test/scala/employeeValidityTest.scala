@@ -1,14 +1,29 @@
-import com.knoldus.models.Employee
-import com.knoldus.validator.EmployeeValidator
+import com.knoldus.db.CompanyReadDto
+import com.knoldus.models.{Employee}
+import com.knoldus.validator.{EmailValidator, EmployeeValidator}
+import org.mockito.MockitoSugar.{mock, when}
 import org.scalatest.flatspec.AnyFlatSpec
 
-class employeeValidityTest extends AnyFlatSpec{
+class EmployeeValidityTest extends AnyFlatSpec{
 
-  "employeeValidityTest" should "verify if employee is valid or not" in {
+  val sampleEmployee: Employee = Employee("Mayank","Verma",22,500000,"fgdf","Knoldus","mayank@knoldus.com")
+  val mockedCompanyReadDto: CompanyReadDto = mock[CompanyReadDto]
+  val mockedEmailValidator: EmailValidator = mock[EmailValidator]
 
-    val employeeValidityObj = new EmployeeValidator
-    assert(employeeValidityObj.employeeIsValid(Employee("May","Ver",22,40000,"Software Consultant","Knoldus","mayank.verma@knoldus.com")) == true)
+  "employee" should "be valid" in{
+    val employeeValidator = new EmployeeValidator
 
+    when(mockedCompanyReadDto.getCompanyByName(sampleEmployee.companyName).isDefined && mockedEmailValidator.emailIdIsValid(sampleEmployee.emailId)) thenReturn true
+
+    assert(employeeValidator.employeeIsValid(sampleEmployee))
+  }
+
+  "employee" should "be invalid" in{
+    val employeeValidator = new EmployeeValidator
+
+    when(mockedCompanyReadDto.getCompanyByName(sampleEmployee.companyName).isDefined && mockedEmailValidator.emailIdIsValid(sampleEmployee.emailId)) thenReturn false
+
+    assert(!employeeValidator.employeeIsValid(sampleEmployee))
   }
 
 }
