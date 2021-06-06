@@ -5,14 +5,11 @@ import com.knoldus.models.Company
 
 class CompanyValidator {
 
-  val companyObj = new CompanyReadDto
-  val emailvalidobj = new EmailValidator
-
+  val companyReadDto = new CompanyReadDto
+  val emailValidator = new EmailValidator
   def companyIsValid(company: Company): Boolean = {
-    if(companyObj.companies.contains(company.name)/*does not exits*/) false
-    else {
-      if(emailvalidobj.emailIdIsValid(company.emailId) == true/*ifemailvalid*/) true
-      else false
-    }
+
+    if(companyReadDto.getCompanyByName(company.name).isEmpty && emailValidator.emailIdIsValid(company.emailId)) true
+    else false
   }
 }
